@@ -114,3 +114,9 @@ upcommerce-app-two                  0/1     1            0           64m
 ![add visualization](doc/add-visualization.png)
 
 ![configure new datasource](doc/new-datasource.png)
+
+4. Select prometheus, in the connection field enter URL for prometheus:
+
+![prometheus link](doc/prometheus-link.png)
+
+![connection url](doc/connection-url.png)
