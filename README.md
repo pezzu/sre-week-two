@@ -99,3 +99,12 @@ prometheus-server                   1/1     1            1           74m
 upcommerce-app-two                  0/1     1            0           64m
 ```
 
+## Access Grafana
+
+1. In the terminal window make sure port for grafana (3000) is public
+
+![ports](doc/ports.png)
+
+2. Open the link and login (admin/admin)
+
+3. In grafana go to Dashboards -> Create Dashboard -> Add visualization
