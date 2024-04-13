@@ -107,4 +107,10 @@ upcommerce-app-two                  0/1     1            0           64m
 
 2. Open the link and login (admin/admin)
 
-3. In grafana go to Dashboards -> Create Dashboard -> Add visualization
+3. In grafana go to Dashboards -> Create Dashboard -> Add visualization -> Configure new datasource
+
+![create dashboard](doc/create-dashboard.png)
+
+![add visualization](doc/add-visualization.png)
+
+![configure new datasource](doc/new-datasource.png)
