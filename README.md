@@ -130,7 +130,7 @@ upcommerce-app-two                  0/1     1            0           64m
 7. Here you can add and test various metrics and save to Dashboard
 
 
-## Troubleshooting
+## Troubleshooting using kubectl
 
 1. get deployments status
 
@@ -282,3 +282,43 @@ kubectl logs upcommerce-app-two-56cff9c64d-hk276 -n sre
 ```
 
 _(No logs if pod is not started)_
+
+5. Fix the problem:
+
+in deployment.yml, modify the 
+
+```yml
+containers:
+    - name: upcommerce
+        ...
+        resources:
+        limits:
+            cpu: "10"
+```
+
+limits to "1" (Codespaces doesn't provide more than 1 CPU)
+
+apply new settings:
+
+```sh
+kubectl apply -f deployment.yml -n sre
+```
+
+## Troubleshooting using Grafana/Prometheus
+
+
+1. Usefull metrics to be added to grafana:
+
+```
+kube_deployment_status_replicas_unavailable{deployment="upcommerce-app-two", namespace="sre"}
+```
+
+Show unavailable replicas:
+
+![unavailable replicas](doc/unavailable-replicas.png)
+
+2. Prometheus alert manager
+
+Prometheus alert manager contains an alert signaling of unavailable replica:
+
+![unavailable replica alert](doc/unavailable-replica-alert.png)
