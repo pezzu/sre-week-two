@@ -205,7 +205,7 @@ kubectl get pods -n sre
 outputs:
 
 ```
-AME                                                READY   STATUS    RESTARTS      AGE
+NAME                                                READY   STATUS    RESTARTS      AGE
 grafana-557d966c8c-gv7gz                            1/1     Running   2 (14m ago)   27h
 prometheus-alertmanager-0                           1/1     Running   2 (14m ago)   27h
 prometheus-kube-state-metrics-65468947fb-nksfb      1/1     Running   4 (13m ago)   27h
