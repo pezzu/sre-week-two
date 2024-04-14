@@ -194,6 +194,91 @@ Events:
   Normal  ScalingReplicaSet  2m23s  deployment-controller  Scaled up replica set upcommerce-app-two-56cff9c64d to 1
 ```
 
-_which already indicates the problem (MinimumReplicasUnavailable) but we will continue_
+**_which already indicates the problem (MinimumReplicasUnavailable) but we will continue_**
 
-3. get the logs
+3. get detailed info about the pod:
+
+```sh
+kubectl get pods -n sre
+```
+
+outputs:
+
+```
+AME                                                READY   STATUS    RESTARTS      AGE
+grafana-557d966c8c-gv7gz                            1/1     Running   2 (14m ago)   27h
+prometheus-alertmanager-0                           1/1     Running   2 (14m ago)   27h
+prometheus-kube-state-metrics-65468947fb-nksfb      1/1     Running   4 (13m ago)   27h
+prometheus-prometheus-node-exporter-vldvb           1/1     Running   2 (14m ago)   27h
+prometheus-prometheus-pushgateway-76976dc66-b7bdx   1/1     Running   2 (14m ago)   27h
+prometheus-server-8444b5b7f7-r977w                  2/2     Running   4 (14m ago)   27h
+upcommerce-app-two-56cff9c64d-hk276                 0/1     Pending   0             10m
+```
+
+```sh
+kubectl describe pod upcommerce-app-two-56cff9c64d-hk276 -n sre
+```
+
+outputs
+
+```
+Name:             upcommerce-app-two-56cff9c64d-hk276
+Namespace:        sre
+Priority:         0
+Service Account:  default
+Node:             <none>
+Labels:           app=upcommerce-app-two
+                  pod-template-hash=56cff9c64d
+Annotations:      <none>
+Status:           Pending
+IP:               
+IPs:              <none>
+Controlled By:    ReplicaSet/upcommerce-app-two-56cff9c64d
+Containers:
+  upcommerce:
+    Image:      uonyeka/upcommerce:v3
+    Port:       5000/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:     10
+      memory:  4Gi
+    Requests:
+      cpu:        10
+      memory:     4Gi
+    Environment:  <none>
+    Mounts:
+      /var/run/secrets/kubernetes.io/serviceaccount from kube-api-access-rhk94 (ro)
+Conditions:
+  Type           Status
+  PodScheduled   False 
+Volumes:
+  kube-api-access-rhk94:
+    Type:                    Projected (a volume that contains injected data from multiple sources)
+    TokenExpirationSeconds:  3607
+    ConfigMapName:           kube-root-ca.crt
+    ConfigMapOptional:       <nil>
+    DownwardAPI:             true
+QoS Class:                   Guaranteed
+Node-Selectors:              <none>
+Tolerations:                 node.kubernetes.io/not-ready:NoExecute op=Exists for 300s
+                             node.kubernetes.io/unreachable:NoExecute op=Exists for 300s
+Events:
+  Type     Reason            Age    From               Message
+  ----     ------            ----   ----               -------
+  Warning  FailedScheduling  9m41s  default-scheduler  0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..
+  Warning  FailedScheduling  4m33s  default-scheduler  0/1 nodes are available: 1 Insufficient cpu. preemption: 0/1 nodes are available: 1 No preemption victims found for incoming pod..
+```
+
+**_Which also indicates the problem (Insufficient cpu)_**
+
+4. Get logs from the pod:
+
+```sh
+kubectl get pods -n sre
+```
+
+```sh
+kubectl logs upcommerce-app-two-56cff9c64d-hk276 -n sre
+```
+
+_(No logs if pod is not started)_
