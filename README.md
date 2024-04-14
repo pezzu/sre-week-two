@@ -120,3 +120,80 @@ upcommerce-app-two                  0/1     1            0           64m
 ![prometheus link](doc/prometheus-link.png)
 
 ![connection url](doc/connection-url.png)
+
+5. Press Save and Test
+
+6. Repeat step 3. but at the end select new created datasource
+
+![new visualization](doc/new-visualization.png)
+
+7. Here you can add and test various metrics and save to Dashboard
+
+
+## Troubleshooting
+
+1. get deployments status
+
+```sh
+kubectl get deployment -n sre
+```
+
+outpouts
+
+```
+NAME                                READY   UP-TO-DATE   AVAILABLE   AGE
+grafana                             1/1     1            1           27h
+prometheus-kube-state-metrics       1/1     1            1           27h
+prometheus-prometheus-pushgateway   1/1     1            1           27h
+prometheus-server                   1/1     1            1           27h
+upcommerce-app-two                  0/1     1            0           29s
+```
+
+2. get detailed info of the deployment
+
+```sh
+kubectl describe deployment upcommerce-app-two -n sre
+```
+
+outputs:
+
+```
+Name:                   upcommerce-app-two
+Namespace:              sre
+CreationTimestamp:      Sun, 14 Apr 2024 21:26:48 +0000
+Labels:                 <none>
+Annotations:            deployment.kubernetes.io/revision: 1
+Selector:               app=upcommerce-app-two
+Replicas:               1 desired | 1 updated | 1 total | 0 available | 1 unavailable
+StrategyType:           RollingUpdate
+MinReadySeconds:        0
+RollingUpdateStrategy:  25% max unavailable, 25% max surge
+Pod Template:
+  Labels:  app=upcommerce-app-two
+  Containers:
+   upcommerce:
+    Image:      uonyeka/upcommerce:v3
+    Port:       5000/TCP
+    Host Port:  0/TCP
+    Limits:
+      cpu:        10
+      memory:     4Gi
+    Environment:  <none>
+    Mounts:       <none>
+  Volumes:        <none>
+Conditions:
+  Type           Status  Reason
+  ----           ------  ------
+  Available      False   MinimumReplicasUnavailable
+  Progressing    True    ReplicaSetUpdated
+OldReplicaSets:  <none>
+NewReplicaSet:   upcommerce-app-two-56cff9c64d (1/1 replicas created)
+Events:
+  Type    Reason             Age    From                   Message
+  ----    ------             ----   ----                   -------
+  Normal  ScalingReplicaSet  2m23s  deployment-controller  Scaled up replica set upcommerce-app-two-56cff9c64d to 1
+```
+
+_which already indicates the problem (MinimumReplicasUnavailable) but we will continue_
+
+3. get the logs
